@@ -7,19 +7,20 @@
     <title>Psychic-Game</title>
 
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/reset.css">
 </head>
 <body>
     <h1>Psychic Game</h1>
 
     <p>Guess what letter I'm thinking of</p>
 
-    <p>Wins: </p>
+    <p id="wins-text">Wins: </p>
 
-    <p>Losses: </p>
+    <p id="losses-text">Losses: </p>
 
-    <p>Guesses Left: </p>
+    <p id="guessesleft-text">Guesses Left: </p>
 
-    <p>Your Guesses so far: </p>
+    <p id="guesses-text">Your Guesses so far: </p>
 
     <script type="text/javascript">
         //Array of letter options.
@@ -28,8 +29,13 @@
         //Variables to hold number of wins, loses, and guesses. They start at 0.
         var wins = 0;
         var losses = 0;
-        var numberGuesses = 9;
+        var guessesLeft = 9;
         var guessChoice = [];
+
+        var winsText = document.getElementById("wins-text");
+        var lossesText = document.getElementById("losses-text");
+        var guessesLeftText = document.getElementById("guessesleft-text");
+        var guessChoiceText = document.getElementById("guesschoice-text");
 
         //Run whenever user presses a key.
         document.onkeyup = function(event) {
@@ -37,36 +43,35 @@
             //Randomly chooses a choice from options array. This is computer's letter choice.
             var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
-            //Determines which key was pressed
-            var userGuess = event.key;
+            //Determines which key was pressed by user.
+            var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+
+            //Store guesses so far.
+            guessChoice.push(userGuess);
 
             //This logic determines the outcome of the game and increments the appropriate number.
-            if (options.indexOf(userGuess) > -1) {
-
-                if (userGuess === computerGuess) {
-                    win++,
-                    numberGuesses = 9;
-                    guessChoices = [];
-                } else if (userGuess != computerGuess) {
-                    numberGuesses --;
-                    guessChoices.push(userGuess);
-                } else (numberGuesses === 0) {
-                    numberGuesses = 9;
-                    losses ++;
-                    guessChoices = [];
-                }
-
-                //Display the user wins, losses number guess left and their guesses.
-                var html =
-                "<h1>Psychic Game</h1>" +
-                "<p>Guess what letter I'm thinking of</p>" +
-                "<p>Wins: " + wins + "</p>" +
-                "<p>Losses: " + losses + "</p>" +
-                "<p>Guesses Left: " + numberGuesses + "</p>" +
-                "<p>You Guesses so far: " + guesChoices.join(", ") + "</p>";
-                document.querySelector("#game").innerHTML = html;
+            if (userGuess === computerGuess) {
+                wins++;
+                guessesLeft = 9;
+                guessChoice.length = 0;
+            } else if (guessesLeft === 0) {
+                losses++;
+                guessesLeft = 9;
+                guessChoice.length = 0;
+            } else if (userGuess !== computerGuess) {
+                guessesLeft--;
             }
-        };
+
+            //Display the user wins, losses number guess left and their guesses.
+            winsText.textContent = "Wins: " + wins;
+            lossesText.textContent = "Losses: " + losses;
+            guessesLeftText.textContent = "Guesses Left: " + guessesLeft;
+            guessChoiceText.textContent = "Your Guesses so far: " + guessChoice;
+            
+            // document.querySelector("#game").innerHTML = html;
+                
+            };
+        
     </script>
     
 </body>
